@@ -5,7 +5,8 @@ import "dotenv/config";
 import app from './src/app.js';
 import connectDB from './src/config/database.js';
 connectDB();
-
+import {testai } from './src/services/ai.service.js';
+testai();
 
 app.listen(3000,(()=>{
     console.log('listening on port 3000');
