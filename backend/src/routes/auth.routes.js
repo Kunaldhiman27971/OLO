@@ -1,6 +1,7 @@
 import { Router } from "express"
-import { register } from "../controllers/auth.controller.js"
-import { registerValidator } from "../validators/auth.vaidate.js"
+import { register, verifyEmail, loginUser, logoutUser, forgotPassword, getResetPasswordPage, resetPassword,getMe } from "../controllers/auth.controller.js"
+import { registerValidator, loginValidator, forgotPasswordValidator, resetPasswordValidator } from "../validators/auth.vaidate.js"
+import { requireAuth } from "../middleware/auth.middleware.js"
 
 
 const authRouter = Router()
@@ -14,6 +15,17 @@ const authRouter = Router()
 
 authRouter.post("/register", registerValidator, register)
 
+
+/*
+    @route GET /api/auth/verify-email
+    @desc Verify user's email using the token sent in the verification email
+    @access Public  
+    @query {token}
+*/
+
+authRouter.get("/verify-email", verifyEmail)
+
+
 /*
     @route POST /api/auth/login
     @desc Login user and return JWT token
@@ -21,7 +33,7 @@ authRouter.post("/register", registerValidator, register)
     @body {email,password}
 */
 
-
+authRouter.post("/login", loginValidator, loginUser)
 
 
 /* 
@@ -31,18 +43,7 @@ authRouter.post("/register", registerValidator, register)
     @body No body required
 */
 
-
-
-
-/*
-    @route GET /api/auth/verify-email
-    @desc Verify user's email using the token sent in the verification email
-    @access Public  
-    @query {token}
-*/
-
-
-
+authRouter.post("/logout", requireAuth, logoutUser)
 
 /*
     @route get /api/auth/get-user
@@ -51,7 +52,7 @@ authRouter.post("/register", registerValidator, register)
     @body No body required
 */
 
-
+authRouter.get("/get-user", requireAuth, getMe)
 
 
 /*
@@ -61,6 +62,11 @@ authRouter.post("/register", registerValidator, register)
     @body {email}
 */
 
+authRouter.post("/forgot-password", forgotPasswordValidator, forgotPassword)
+
+authRouter.get("/reset-password", getResetPasswordPage)
+
+authRouter.post("/reset-password", resetPasswordValidator, resetPassword)
 
 
 export default authRouter
